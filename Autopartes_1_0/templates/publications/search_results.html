@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %} Últimos anuncios {% endblock %}
+
+{% block content %}
+
+    {% if search_results_list %}
+
+<table class="table table-hover my-5">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Título</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Tags</th>
+    </tr>
+  </thead>
+       {% for a in search_results_list %}
+  <tbody>
+    <tr>
+      <th scope="row">{{a.id}}</th>
+      <td><a href="{% url 'publications:detail' a.id %}">{{a.pub_title}}</a></td>
+      <td class="font-italic">{{a.pub_date|date:"j"}} de {{a.pub_date|date:"N"}}</td>
+      <td>{{a.pub_author}}</td>
+      <td>
+          {% for ptag in a.prim_tags_list %}
+          <a href="#"><span class="badge badge-danger">{{ptag}}</span></a>
+          {% endfor %}
+
+          {% for stag in a.sec_tags_list %}
+          <span class="badge badge-secondary">{{stag}}</span>
+          {% endfor %}
+      </td>
+    </tr>
+  </tbody>
+
+       {% endfor %}
+</table>
+
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        No se ha encontrado nada =(
+    </div>
+    {% endif %}
+
+<h3>
+
+    {{ form }}
+
+</h3>
+
+<h4>Crear nuevo anuncio</h4>
+<form action="create_publication/" method="post">
+ {% csrf_token %}
+  <div class="form-group">
+    <label for="exampleInputTitle1">Título del anuncio</label>
+    <input type="text" class="form-control" placeholder="Título del anuncio" name="title" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputName1">Su nombre</label>
+    <input type="text" class="form-control" placeholder="Su nombre" name="name" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Descripción</label>
+    <textarea class="form-control" rows="5" placeholder="Deje la descripción en este campo" name="text" required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlFile1">Example file input</label>
+    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+  <button type="submit" class="btn btn-primary">Publicar</button>
+</form>
+
+
+
+
+
+
+
+{% endblock %}
